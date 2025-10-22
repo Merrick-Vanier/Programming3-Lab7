@@ -4,6 +4,9 @@
  */
 package Lab7;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.RotateTransition;
+import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
@@ -20,7 +23,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 /**
- *
+ * github link: https://github.com/Merrick-Vanier/Programming3-Lab7
  * @author 6237800
  */
 public class Lab7 extends Application {
@@ -49,6 +52,8 @@ public class Lab7 extends Application {
         object1.setFill(Color.RED);
         
         TranslateTransition path1 = new TranslateTransition(new Duration(3000), object1);
+        path1.setFromX(0);
+        path1.setFromY(0);
         path1.setToX(200);
         TranslateTransition path2 = new TranslateTransition(new Duration(3000), object1);
         path2.setToY(200);
@@ -58,20 +63,51 @@ public class Lab7 extends Application {
         path4.setToY(0);
         
         SequentialTransition sequence1 = new SequentialTransition(path1, path2, path3, path4);
-        sequence1.setCycleCount(1);
-        sequence1.play();
+        sequence1.setCycleCount(0);
         
         
         //object2
         Circle object2 = new Circle(100, 100, 20);
         object2.setFill(Color.BLUE);
         
+        FadeTransition fade = new FadeTransition(Duration.seconds(3), object2);
+        fade.setFromValue(1);
+        fade.setToValue(0.5);
         
+        ScaleTransition scale = new ScaleTransition(Duration.seconds(3), object2);
+        scale.setFromX(1);
+        scale.setToX(2);
+        
+        RotateTransition rotate = new RotateTransition(Duration.seconds(3), object2);
+        rotate.setFromAngle(0);
+        rotate.setToAngle(90);
+        
+        TranslateTransition up = new TranslateTransition(Duration.seconds(3), object2);
+        up.setFromY(0);
+        up.setToY(-50);
+        
+        SequentialTransition sequence2 = new SequentialTransition(fade, scale, rotate, up);
+        sequence2.setCycleCount(1);
         
         Pane p = new Pane(object1, object2);
         bp.setTop(p);
         
-        Scene scene = new Scene(bp, 600, 600);
+        start.setOnAction(e -> {
+            sequence1.play();
+            sequence2.play();
+        });
+        
+        reset.setOnAction(e -> {
+            sequence1.playFromStart();
+            sequence2.playFromStart();
+        });
+        
+        exit.setOnAction(e -> {
+            sequence1.stop();
+            sequence2.stop();
+        });
+        
+        Scene scene = new Scene(bp, 250, 300);
         stage.setScene(scene);
         stage.show();
     }
